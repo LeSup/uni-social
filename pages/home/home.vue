@@ -78,6 +78,8 @@
 <script>
 	import { getAdvertisingList, getDynamicList, getNewsList } from '@/config/api';
 	
+	const Limit = 5;
+	
 	export default {
 		data() {
 			return {
@@ -86,7 +88,9 @@
 				newsList: [],
 				current: 0,
 				dynamicListHeight: 0,
-				newsListHeight: 0
+				newsListHeight: 0,
+				hasMoreDynamic: true,
+				hasMoreNews: true
 			}
 		},
 		computed: {
@@ -97,18 +101,47 @@
 		},
 		onLoad() {
 			this.getAdvertisingList();
-			this.getDynamicList();
-			this.getNewsList();
+			this.getDynamicList(true);
+			this.getNewsList(true);
+		},
+		onPullDownRefresh() {
+			this.getAdvertisingList();
+			if (this.current === 0) {
+				this.getDynamicList(true);
+			} else {
+				this.getNewsList(true);
+			}
+		},
+		onReachBottom() {
+			if (this.current === 0) {
+				this.getDynamicList();
+			} else {
+				this.getNewsList();
+			}
 		},
 		methods: {
 			async getAdvertisingList() {
 				const list = await getAdvertisingList({ space: '1,2,3' });
 				this.advertisingList = list;
 			},
-			async getDynamicList() {
-				const { feeds } = await getDynamicList();
+			async getDynamicList(reset) {
+				if (reset) {
+					this.hasMoreDynamic = true;
+				} else if (!this.hasMoreDynamic) {
+					uni.showToast({
+						icon: 'none',
+						title: '抱歉，暂无更多数据！'
+					});
+					return;
+				}
+				
+				const params = {
+					limit: Limit,
+					after: reset ? undefined : this.dynamicList[this.dynamicList.length - 1]?.id
+				};
+				const { feeds } = await getDynamicList(params);
 				const { baseURL } = uni.$u.http.config;
-				this.dynamicList = feeds.map(item => {
+				const result = feeds.map(item => {
 					const { id, images: [image], user: { avatar, name }, feed_content, has_like, like_count } = item;
 					return {
 						id,
@@ -120,11 +153,37 @@
 						count: like_count
 					};
 				});
+				
+				uni.showToast({
+					icon: 'success',
+					title: '数据加载成功！'
+				});
+				
+				if (reset) {
+					this.dynamicList = result;
+				} else {
+					this.dynamicList.push(...result);
+				}
+				this.hasMoreDynamic = result.length === Limit;
 			},
-			async getNewsList() {
-				const list = await getNewsList();
+			async getNewsList(reset) {
+				if (reset) {
+					this.hasMoreNews = true;
+				} else if (!this.hasMoreNews) {
+					uni.showToast({
+						icon: 'none',
+						title: '抱歉，暂无更多数据！'
+					});
+					return;
+				}
+
+				const params = {
+					limit: Limit,
+					after: reset ? undefined : this.newsList[this.newsList.length - 1]?.id
+				};
+				const list = await getNewsList(params);
 				const { baseURL } = uni.$u.http.config;
-				this.newsList = list.map(item => {
+				const result = list.map(item => {
 					const { id, image, title, author, created_at } = item;
 					return {
 						id,
@@ -134,6 +193,18 @@
 						createTime: created_at,
 					};
 				});
+				
+				uni.showToast({
+					icon: 'success',
+					title: '数据加载成功！'
+				});
+				
+				if (reset) {
+					this.newsList = result;
+				} else {
+					this.newsList.push(...result);
+				}
+				this.hasMoreNews = result.length === Limit;
 			},
 			handleTap(current) {
 				this.current = current;

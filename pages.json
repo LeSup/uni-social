@@ -3,13 +3,15 @@
 		{
 			"path": "pages/home/home",
 			"style": {
-				"navigationStyle": "custom"
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true
 			}
 		},
 		{
 			"path": "pages/dynamic/dynamic",
 			"style": {
-				"navigationBarTitleText": "动态"
+				"navigationBarTitleText": "动态",
+				"enablePullDownRefresh": true
 			}
 		},
 		{

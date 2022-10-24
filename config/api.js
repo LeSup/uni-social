@@ -10,7 +10,7 @@ const http = uni.$u.http;
 export const getAdvertisingList = (params) => http.get('/advertisingspace/advertising', { params });
 
 // 获取动态列表
-export const getDynamicList = () => http.get('/feeds');
+export const getDynamicList = (params) => http.get('/feeds', { params });
 
 // 获取资讯列表
-export const getNewsList = () => http.get('/news');
+export const getNewsList = (params) => http.get('/news', { params });
