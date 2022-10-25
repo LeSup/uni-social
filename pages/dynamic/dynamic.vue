@@ -3,7 +3,7 @@
 		<view class="container" v-for="(group, index) in list" :key="index">
 			<view class="content-wrapper">
 				<view class="content" :class="{rtl: index % 2 === 1}">
-					<navigator class="navigator" v-for="item in group" :key="item.id">
+					<navigator class="navigator" :url="'/subPages/dynamicInfo/dynamicInfo?id=' + item.id" v-for="item in group" :key="item.id">
 						<image class="image" :src="item.cover" />
 					</navigator>
 				</view>
@@ -87,7 +87,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.dynamic {
 		min-height: 100vh;
 		background-color: #eee;

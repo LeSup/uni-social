@@ -17,7 +17,7 @@
 		{
 			"path": "pages/me/me",
 			"style": {
-				"navigationBarTitleText": "我的"
+				"navigationStyle": "custom"
 			}
 		},
 		{
@@ -27,6 +27,26 @@
 			}
 		}
 	],
+	"subPackages": [{
+		"root": "subPages",
+		"pages": [{
+			"path": "setting/setting",
+			"style": {
+				"navigationBarTitleText": "设置"
+			}
+		},
+		{
+			"path": "dynamicInfo/dynamicInfo",
+			"style": {
+				"navigationBarTitleText": "动态详情"
+			}
+		}, {
+			"path": "newsInfo/newsInfo",
+			"style": {
+				"navigationBarTitleText": "新闻详情"
+			}
+		}]
+	}],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "微社交",

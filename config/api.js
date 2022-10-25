@@ -12,5 +12,11 @@ export const getAdvertisingList = (params) => http.get('/advertisingspace/advert
 // 获取动态列表
 export const getDynamicList = (params) => http.get('/feeds', { params });
 
+// 根据id获取动态详情
+export const getDynamicInfo = (id) => http.get('/feeds/' + id);
+
 // 获取资讯列表
 export const getNewsList = (params) => http.get('/news', { params });
+
+// 根据id获取资讯详情
+export const getNewsInfo = (id) => http.get('/news/' + id);

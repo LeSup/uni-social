@@ -36,7 +36,7 @@
 			<swiper class="listSwiper" :style="listSwiperStyle" :current="current" @change="handleSwiperChange">
 				<swiper-item>
 					<view class="dynamic">
-						<view class="item" v-for="item in dynamicList" :key="item.id">
+						<navigator class="item" :url="'/subPages/dynamicInfo/dynamicInfo?id=' + item.id" v-for="item in dynamicList" :key="item.id">
 							<view class="image-wrapper">
 								<image class="image" :src="item.cover" @load="_calcListHeight(0)" mode="widthFix" />
 							</view>
@@ -49,12 +49,12 @@
 								<image class="icon" src="/static/icons/not_favorite.png" />
 								<text class="count">{{item.count}}</text>
 							</view>
-						</view>
+						</navigator>
 					</view>
 				</swiper-item>
 				<swiper-item>
 					<view class="news">
-						<view class="item" v-for="item in newsList" :key="item.id">
+						<navigator class="item" :url="'/subPages/newsInfo/newsInfo?id=' + item.id" v-for="item in newsList" :key="item.id">
 							<view class="content">
 								<view class="title u-line-2">
 									<text>{{item.title}}</text>
@@ -67,7 +67,7 @@
 							<view class="image-wrapper">
 								<image class="image" :src="item.image" @load="_calcListHeight(1)" />
 							</view>
-						</view>
+						</navigator>
 					</view>
 				</swiper-item>
 			</swiper>
@@ -232,7 +232,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.home {
 		min-height: 100vh;
 		background-color: #eee;
@@ -241,7 +241,7 @@
 		.carousel-wrapper {
 			position: relative;
 			height: 0;
-			padding-top: 50%;
+			padding-top: 60%;
 			.carousel {
 				position: absolute;
 				top: 0;
