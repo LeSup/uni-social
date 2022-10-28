@@ -43,7 +43,7 @@
 		}, {
 			"path": "newsInfo/newsInfo",
 			"style": {
-				"navigationBarTitleText": "新闻详情"
+				"navigationStyle": "custom"
 			}
 		}]
 	}],

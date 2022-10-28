@@ -17,7 +17,7 @@
 						<text class="text">个人设置</text>
 					</navigator>
 					<view class="message" @tap="showMessage">
-						<image class="icon" src="/static/icons/messge.png" />
+						<image class="icon" src="/static/icons/messge_a.png" />
 						<text class="text">我的消息</text>
 					</view>
 				</view>
