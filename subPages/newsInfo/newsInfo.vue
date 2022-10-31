@@ -1,5 +1,8 @@
 <template>
 	<view class="news-info">
+		<view class="title">
+			1231213
+		</view>
 		<view class="header">
 			<image class="bg" :src="data.image" />
 			<view class="content">
@@ -14,7 +17,7 @@
 			</view>
 		</view>
 		<view class="content">
-			<rich-text :nodes="data.content"></rich-text>
+			<html-parse :content="data.content"></html-parse>
 		</view>
 		<view class="split"></view>
 		<comments :params="params" :data="commentsData" :load-comments="loadComments" />
@@ -22,12 +25,13 @@
 </template>
 
 <script>
+	import HtmlParse from '@/components/html-parse/parse';
 	import Comments from '@/components/comments';
-	import htmlParser from '@/common/html-parser';
 	import { getNewsInfo, getNewsComments } from '@/config/api';
 	
 	export default {
 		components: {
+			HtmlParse,
 			Comments,
 		},
 		data() {
@@ -39,6 +43,14 @@
 			}
 		},
 		onLoad({ id }) {
+			// #ifdef MP-WEIXIN
+			// 微信条件下分享到朋友圈、群组
+			wx.showShareMenu({
+				withShareTicket: true,
+				menus: ['shareAppMessage', 'shareTimeline']
+			})
+			// #endif
+			
 			this.params = { id };
 			this.getNewsInfo(id);
 		},
@@ -47,14 +59,16 @@
 				const { image, title, author, created_at, hits, content, has_like, digg_count, comment_count } = await getNewsInfo(id);
 				const { baseURL } = uni.$u.http.config;
 				
-				const newContent = content.replace(/@!\[.*\]\((\d*)\)/g, "<img class=\"image\" src='" + baseURL + 'files/$1' + "' />");
+				const newContent = content.replace(/@!\[.*\]\((\d*)\)/g, "<img class=\"image\" src='" + baseURL + 'files/$1' + "' />")
+					.replace(/\s\D\s/g, "<br />");
+					
 				this.data = {
 					image: baseURL + 'files/' + image?.id || '',
 					title,
 					author,
 					createTime: created_at,
 					readCount: hits,
-					content: htmlParser(newContent),
+					content: newContent,
 				};
 				this.commentsData = {
 					favorite: has_like,
@@ -66,8 +80,20 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+	/* 引入富文本解析器 */
+	@import '@/components/html-parse/parse.css';
+	
 	.news-info {
+		.title {
+			position: fixed;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			height: 80rpx;
+			background: #fff;
+		}
 		.header {
 			position: relative;
 			height: 60vw;
